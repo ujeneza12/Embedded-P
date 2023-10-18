@@ -4,6 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Information Table</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #F2F2F2;
+        }
+        tr:nth-child(even) {
+            background-color: #F2F2F2;
+        }
+    </style><style>
+       
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #F2F2F2;
+        }
+        tr:nth-child(even) {
+            background-color: #F2F2F2;
+        }
+    </style>
 </head>
 <body>
     <h1>Patient Information Table</h1>
@@ -18,7 +57,7 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Data will be inserted here -->
+           
         </tbody>
     </table>
 
@@ -47,5 +86,56 @@
                 console.error('Error:', error);
             });
     </script>
+
+
+
+
+<canvas id="patientChart" width="2%"  ></canvas>
+
+<script>
+    fetch('http://localhost:3000/api/patients')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(patient => patient.PatientName);
+            const heartRates = data.map(patient => patient.HeartRate);
+            const bodyTemperatures = data.map(patient => patient.BodyTemperature);
+            const frequentSicknesses = data.map(patient => patient.FrequentSickness);
+
+            const ctx = document.getElementById('patientChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Heart Rate',
+                            data: heartRates,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Body Temperature (°C)',
+                            data: bodyTemperatures,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+</script>
 </body>
 </html>
+
